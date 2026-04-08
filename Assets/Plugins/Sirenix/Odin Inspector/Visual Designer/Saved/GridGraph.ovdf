@@ -1,0 +1,22 @@
+OVDF v1.1
+NavGrid, Assembly-CSharp
+MetaGuid:989b73823f8e40246be6549cbe31e720
+
+# $self
+- [Sirenix.OdinInspector.HideMonoScriptAttribute]
+
+# neighbourType
++ [Sirenix.OdinInspector.EnumToggleButtonsAttribute]
+
+# grid
+Position: $root:1
+
+# BakeGraph()
++ [Sirenix.OdinInspector.ButtonAttribute]
+	Name = "Bake"
+	buttonHeight = 30
+	HasDefinedButtonHeight = True
++ [UnityEngine.SpaceAttribute]
+
+# navigationalMap
++ [Sirenix.OdinInspector.ChildGameObjectsOnlyAttribute]
