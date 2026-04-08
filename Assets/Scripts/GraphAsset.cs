@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -9,28 +10,30 @@ public class GraphAsset : ScriptableObject
 {
     [SerializeField, HideInInspector]
     private AdjacencyGraph<GridTileVertex, GridTileEdge> gridGraph;
+    public bool initialized => gridGraph != null;
+    
     public AdjacencyGraph<GridTileVertex, GridTileEdge> GetGraphByValue() => gridGraph.Clone();
+    public IEnumerable<GridTileEdge> edges => gridGraph.Edges;
+    public IEnumerable<GridTileVertex> vertices => gridGraph.Vertices;
     
     public void GenerateGraph(Tilemap navigationalMap, NeighbourType neighbourType) {
         navigationalMap.CompressBounds();
-
-        AdjacencyGraph<GridTileVertex, GridTileEdge> newGridGraph = new();
+        
+        gridGraph = new();
 
         foreach (Vector3Int coord in AllCoords(navigationalMap)) {
             Tile tile = navigationalMap.GetTile<Tile>(coord);
             if (!tile) continue;
             
             GridTileVertex newVertex = new GridTileVertex(tile, coord);
-            newGridGraph.AddVertex(newVertex);
+            gridGraph.AddVertex(newVertex);
             
             foreach ((Tile, Vector3Int) neighbour in AllNeighbours(navigationalMap, neighbourType, coord)) {
                 GridTileVertex neighbourVertex = new GridTileVertex(neighbour.Item1, neighbour.Item2);
-                newGridGraph.AddVertex(neighbourVertex);
-                newGridGraph.AddEdge(new GridTileEdge(newVertex, neighbourVertex));
+                gridGraph.AddVertex(neighbourVertex);
+                gridGraph.AddEdge(new GridTileEdge(newVertex, neighbourVertex));
             }
         }
-        
-        gridGraph = newGridGraph;
     }
 
     private static readonly Vector3Int[] cardinalNeighbours = new [] {

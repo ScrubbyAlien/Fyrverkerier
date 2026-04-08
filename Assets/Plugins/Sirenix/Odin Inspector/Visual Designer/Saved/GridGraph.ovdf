@@ -20,3 +20,11 @@ Position: $root:1
 
 # navigationalMap
 + [Sirenix.OdinInspector.ChildGameObjectsOnlyAttribute]
+
+# BakeGrid()
+Visibility: Shown
++ [Sirenix.OdinInspector.ButtonAttribute]
+	Name = "Bake"
+	buttonHeight = 27
+	HasDefinedButtonHeight = True
++ [UnityEngine.SpaceAttribute]

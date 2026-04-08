@@ -1,3 +1,4 @@
+using System;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
@@ -15,7 +16,7 @@ public class NavGrid : MonoBehaviour
     private GraphAsset graphAsset;
     
     [HideIn(PrefabKind.PrefabAsset)]
-    public void BakeGraph() {
+    public void BakeGrid() {
         GraphAsset newGraphAsset = ScriptableObject.CreateInstance<GraphAsset>();
 
         newGraphAsset.GenerateGraph(navigationalMap, neighbourType);
@@ -30,5 +31,17 @@ public class NavGrid : MonoBehaviour
             newGraphAsset, 
             $"Assets/Scenes/{sceneName}/{sceneName}-{nameof(NavGrid)}{GetHashCode()}.asset"
         );
+    }
+
+    public void OnDrawGizmos() {
+        if (!graphAsset || !graphAsset.initialized) return;
+        
+        Gizmos.color = Color.cyan;
+        
+        foreach (GridTileEdge edge in graphAsset.edges) {
+            Vector3 start = navigationalMap.layoutGrid.GetCellCenterWorld(edge.Source.coord);
+            Vector3 end = navigationalMap.layoutGrid.GetCellCenterWorld(edge.Target.coord);
+            Gizmos.DrawLine(start, end);
+        }
     }
 }
