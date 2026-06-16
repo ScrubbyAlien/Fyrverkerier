@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using QuikGraph;
 using UnityEngine.Tilemaps;
@@ -50,24 +49,24 @@ public class GraphAsset : ScriptableObject
         new Vector3Int(-1, 1, 0),
     };
     
-    private IEnumerable AllNeighbours(Tilemap map, NeighbourType neighbourType, Vector3Int origin) {
+    private IEnumerable<(Tile tile, Vector3Int coord)> AllNeighbours(Tilemap map, NeighbourType neighbourType, Vector3Int origin) {
         switch (neighbourType) {
             case NeighbourType.Diagonal:
                 foreach (Vector3Int diagonalNeighbour in diagonalNeighbours) {
-                    Tile neighbor = map.GetTile<Tile>(origin + diagonalNeighbour);
-                    if (neighbor) yield return (neighbor, origin + diagonalNeighbour);
+                    Tile neighbour = map.GetTile<Tile>(origin + diagonalNeighbour);
+                    if (neighbour) yield return (neighbour, origin + diagonalNeighbour);
                 }
                 goto case NeighbourType.Cardinal;
             case NeighbourType.Cardinal:
                 foreach (Vector3Int cardinalNeighbour in cardinalNeighbours) {
-                    Tile neighbor = map.GetTile<Tile>(origin + cardinalNeighbour);
-                    if (neighbor) yield return (neighbor, origin + cardinalNeighbour);
+                    Tile neighbour = map.GetTile<Tile>(origin + cardinalNeighbour);
+                    if (neighbour) yield return (neighbour, origin + cardinalNeighbour);
                 }
                 break;
         }
     }
 
-    private IEnumerable AllCoords(Tilemap map) {
+    private IEnumerable<Vector3Int> AllCoords(Tilemap map) {
         for (int x = map.cellBounds.xMin; x < map.cellBounds.xMax; x++) {
             for (int y = map.cellBounds.yMin; y < map.cellBounds.yMax; y++) {
                 yield return new Vector3Int(x, y, 0);
@@ -103,6 +102,6 @@ public struct GridTileEdge : IEdge<GridTileVertex>
 
 public enum NeighbourType
 {
-    [LabelText("Cardinal", SdfIconType.ArrowsMove)] Cardinal, 
-    [LabelText("Diagonal", SdfIconType.ArrowsFullscreen)] Diagonal
+    Cardinal, 
+    Diagonal
 }

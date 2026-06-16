@@ -1,21 +1,21 @@
 using System;
-using Sirenix.OdinInspector;
+using NaughtyAttributes;
 using UnityEditor;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
-[HideMonoScript]
 public class NavGrid : MonoBehaviour
 {
     [SerializeField]
     private NeighbourType neighbourType;
     [SerializeField]
     private Tilemap navigationalMap;
-    [SerializeField, ReadOnly]
+    [SerializeReference, ReadOnly]
     private GraphAsset graphAsset;
-    
-    [HideIn(PrefabKind.PrefabAsset)]
+
+    [Button]
     public void BakeGrid() {
         GraphAsset newGraphAsset = ScriptableObject.CreateInstance<GraphAsset>();
 
@@ -27,9 +27,10 @@ public class NavGrid : MonoBehaviour
         if (!AssetDatabase.IsValidFolder($"Assets/Scenes/{sceneName}")) {
             AssetDatabase.CreateFolder("Assets/Scenes", sceneName);
         }
+        
         AssetDatabase.CreateAsset(
             newGraphAsset, 
-            $"Assets/Scenes/{sceneName}/{sceneName}-{nameof(NavGrid)}{GetHashCode()}.asset"
+            $"Assets/Scenes/{sceneName}/{sceneName}-{nameof(NavGrid)}-{GetHashCode()}.asset"
         );
     }
 
